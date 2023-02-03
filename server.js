@@ -12,11 +12,7 @@ app.use(async (ctx, next) => {
 });
 ctx.connection = connection;
 ctx.username = 'hank';
-// await next();
-
-// const [rows] = await ctx.connection.query('SELECT * FROM `item` WHERE `item_id` > ?', [0]);
 ctx.type = 'text/html';
-// console.log(rows.length);
 
   if (ctx.path !== "/sse") {
     return await next();
@@ -38,19 +34,16 @@ ctx.type = 'text/html';
     ctx.body = stream;
 
     var rows="";
-for(var i = 0;i<10; i++){
-   [rows] = await ctx.connection.query('SELECT * FROM `item` WHERE `item_id` > ?', [0]);
-
-    // setInterval(() => {
+    setInterval(async() => {
       var data = ["id","123"];
+      [rows] = await ctx.connection.query('SELECT * FROM `item` WHERE `item_id` > ?', [0]);
       // stream.write(`data:${rows[0].item_id},${rows[0].item_name},${rows[0].item_price}`);
       rows.forEach(item => {
         // ctx.body += `${item.item_id},${item.item_name},<hr>`;
         stream.write(`${item.item_id},${item.item_name}`);
     });
       stream.write(`\n\n`);
-    }
-    // }, 2000);
+    }, 2000);
   })
   .use(ctx => {
     ctx.status = 200;
