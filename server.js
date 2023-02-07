@@ -29,21 +29,24 @@ ctx.type = 'text/html';
   });
 
     const stream = new PassThrough();
-
     ctx.status = 200;
     ctx.body = stream;
-
-    var rows="";
+    var tmp;
     setInterval(async() => {
-      var data = ["id","123"];
       [rows] = await ctx.connection.query('SELECT * FROM `item` WHERE `item_id` > ?', [0]);
       // stream.write(`data:${rows[0].item_id},${rows[0].item_name},${rows[0].item_price}`);
-      rows.forEach(item => {
-        // ctx.body += `${item.item_id},${item.item_name},<hr>`;
-        stream.write(`${item.item_id},${item.item_name}`);
-    });
-      stream.write(`\n\n`);
-    }, 2000);
+      if(JSON.stringify(tmp) != JSON.stringify(rows)){
+        rows.forEach(item => {
+          // ctx.body += `${item.item_id},${item.item_name},<hr>`;
+          stream.write(`data:${item.item_id},${item.item_name}`);
+          
+        });
+        stream.write(`\n\n`);
+        tmp = rows;
+      }else{
+        console.log('data is new');
+      }
+    }, 1000);
   })
   .use(ctx => {
     ctx.status = 200;
