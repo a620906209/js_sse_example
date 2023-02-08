@@ -11,8 +11,8 @@ app.use(async (ctx, next) => {
     database: 'mydb'
 });
 ctx.connection = connection;
-ctx.username = 'hank';
-ctx.type = 'text/html';
+// ctx.username = 'hank';
+// ctx.type = 'text/html';
 
   if (ctx.path !== "/sse") {
     return await next();
@@ -39,9 +39,9 @@ ctx.type = 'text/html';
         rows.forEach(item => {
           // ctx.body += `${item.item_id},${item.item_name},<hr>`;
           stream.write(`data:${item.item_id},${item.item_name}`);
-          
+          stream.write(`\n\n`);
         });
-        stream.write(`\n\n`);
+        // stream.write(`\n\n`);
         tmp = rows;
       }else{
         console.log('data is new');
