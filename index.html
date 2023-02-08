@@ -1,0 +1,33 @@
+        <!DOCTYPE html>
+        <html lang="zh-Hant-TW">
+        <head>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>HTML5 API Server-Send Event(伺服器發送事件)</title>
+
+        <script type="text/javascript">
+        window.onload = function() {
+            const source = new EventSource("http://localhost:8080/sse");
+        source.onopen = () => console.log("Connected");
+        source.onerror = console.error;
+        // source.onmessage = console.log;
+        source.addEventListener('message', message, false);
+
+        function message(event) {
+                console.log(event.data);
+                var pullData = event.data;
+                var newElement = document.createElement('li');
+                newElement.innerHTML = pullData + '<hr>';
+                document.body.appendChild(newElement); 
+            }
+        }
+        </script>
+        </head>
+        <body>
+
+        <!-- <button>中斷 Server 連線</button> -->
+
+        </body>
+        </html>
